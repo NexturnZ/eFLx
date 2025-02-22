@@ -41,7 +41,10 @@ def load_results():
     
     result_root_path = ROOT.joinpath("results")
     file_name = "parameter_constant.json"
-    models = ["TRC","TES","R2I","eFlx","Oracle"]
+    # models = ["TRC","TES","R2I","eFlx","Oracle"]
+    with open('config.json') as f:
+        config = json.load(f)
+        models = config["baseline"]
 
     trials = []
 
@@ -83,23 +86,30 @@ def plot_flexibility():
         "size":"28"
         }
     matplotlib.rc("font",**font)
+
+    with open('config.json') as f:
+        config = json.load(f)
+        models = config["baseline"]
     
     results_df = load_results() # load data
 
     fig, (ax1,ax2) = plt.subplots(ncols=2,figsize=(16,6))
     ## with charging constraint
+    model_order = ["TRC","R2I","eFlx","Oracle"]
+
     results_wcl = results_df.query("(model in ['R2I','eFlx','Oracle'] and charging_constraint==True and tau==60) or model=='TRC'")
     sns.barplot(data=results_wcl,x="model",y="flexibility",
-        order=["TRC","R2I","eFlx","Oracle"],color="grey",ax=ax1,capsize=0.15,errwidth=1,errorbar=("sd"))
+        order=[m for m in model_order if m in models],color="grey",ax=ax1,capsize=0.15,errwidth=1,errorbar=("sd"))
     ax1.set_ylabel("Flexibility (MWh)",fontsize=28,fontname="Times New Roman")
     ax1.set_xlabel("",fontsize=28,fontname="Times New Roman")
     ax1.set_ylim(bottom=80)
     ax1.set_title("With charging constraint")
         
     ## without charging constraint
+    model_order = ["TRC","R2I","TES","eFlx"]
     results_wocl = results_df.query("(model in ['R2I','TES','eFlx'] and charging_constraint==False and tau==60) or model=='TRC'")
     sns.barplot(data=results_wocl,x="model",y="flexibility",
-        order=["TRC","R2I","TES","eFlx"],color="grey",ax=ax2,capsize=0.15,errwidth=1,errorbar=("sd"))
+        order=[m for m in model_order if m in models],color="grey",ax=ax2,capsize=0.15,errwidth=1,errorbar=("sd"))
     ax2.set_ylabel("Flexibility (MWh)",fontsize=28,fontname="Times New Roman")
     ax2.set_xlabel("",fontsize=28,fontname="Times New Roman")
     ax2.set_ylim(bottom=80)
@@ -118,23 +128,29 @@ def plot_charging_serv():
         "size":"28"
         }
     matplotlib.rc("font",**font)
+
+    with open('config.json') as f:
+        config = json.load(f)
+        models = config["baseline"]
     
     results_df = load_results() # load data
 
     fig, (ax1,ax2) = plt.subplots(ncols=2,figsize=(16,6))
     ## with charging constraint
+    model_order = ["TRC","R2I","eFlx","Oracle"]
     results_wcl = results_df.query("(model in ['R2I','eFlx','Oracle'] and charging_constraint==True and tau==60) or model=='TRC'")
     sns.barplot(data=results_wcl,x="model",y="e_res",
-        order=["TRC","R2I","eFlx","Oracle"],color="grey",ax=ax1,capsize=0.15,errwidth=1,errorbar=("sd"))
+        order=[m for m in model_order if m in models],color="grey",ax=ax1,capsize=0.15,errwidth=1,errorbar=("sd"))
     ax1.set_ylabel("Charging demand (MWh)",fontsize=28,fontname="Times New Roman")
     ax1.set_xlabel("",fontsize=28,fontname="Times New Roman")
     ax1.set_title("With charging constraint")
     ax1.set_ylim(bottom=0)
         
     ## without charging constraint
+    model_order = ["TRC","R2I","TES","eFlx"]
     results_wocl = results_df.query("(model in ['R2I','TES','eFlx'] and charging_constraint==False and tau==60) or model=='TRC'")
     sns.barplot(data=results_wocl,x="model",y="e_res",
-        order=["TRC","R2I","TES","eFlx"],color="grey",ax=ax2,capsize=0.15,errwidth=1,errorbar=("sd"))
+        order=[m for m in model_order if m in models],color="grey",ax=ax2,capsize=0.15,errwidth=1,errorbar=("sd"))
     ax2.set_ylabel("Charging demand (MWh)",fontsize=28,fontname="Times New Roman")
     ax2.set_xlabel("",fontsize=28,fontname="Times New Roman")
     ax2.set_title("Without charging constraint")
@@ -153,23 +169,29 @@ def plot_charging_prov():
         "size":"28"
         }
     matplotlib.rc("font",**font)
+
+    with open('config.json') as f:
+        config = json.load(f)
+        models = config["baseline"]
     
     results_df = load_results() # load data
 
     fig, (ax1,ax2) = plt.subplots(ncols=2,figsize=(16,6))
     ## with charging constraint
+    model_order = ["TRC","R2I","eFlx","Oracle"]
     results_wcl = results_df.query("(model in ['R2I','eFlx','Oracle'] and charging_constraint==True and tau==60) or model=='TRC'")
     sns.barplot(data=results_wcl,x="model",y="e_res_prov",
-        order=["TRC","R2I","eFlx","Oracle"],color="grey",ax=ax1,capsize=0.15,errwidth=1,errorbar=("sd"))
+        order=[m for m in model_order if m in models],color="grey",ax=ax1,capsize=0.15,errwidth=1,errorbar=("sd"))
     ax1.set_ylabel("Charging demand (MWh)",fontsize=28,fontname="Times New Roman")
     ax1.set_xlabel("",fontsize=28,fontname="Times New Roman")
     ax1.set_title("With charging constraint")
     ax1.set_ylim(bottom=0)
         
     ## without charging constraint
+    model_order = ["TRC","R2I","TES","eFlx"]
     results_wocl = results_df.query("(model in ['R2I','TES','eFlx'] and charging_constraint==False and tau==60) or model=='TRC'")
     sns.barplot(data=results_wocl,x="model",y="e_res_prov",
-        order=["TRC","R2I","TES","eFlx"],color="grey",ax=ax2,capsize=0.15,errwidth=1,errorbar=("sd"))
+        order=[m for m in model_order if m in models],color="grey",ax=ax2,capsize=0.15,errwidth=1,errorbar=("sd"))
     ax2.set_ylabel("Charging demand (MWh)",fontsize=28,fontname="Times New Roman")
     ax2.set_xlabel("",fontsize=28,fontname="Times New Roman")
     ax2.set_title("Without charging constraint")
@@ -188,21 +210,27 @@ def plot_idle():
         "size":"28"
     }
     matplotlib.rc("font",**font)
+
+    with open('config.json') as f:
+        config = json.load(f)
+        models = config["baseline"]
     
     results_df = load_results() # load data
     results_df = results_df.query("(model in ['R2I','eFlx','Oracle'] and charging_constraint==True and tau==60) or model in ['TRC','TES']")
 
     fig, (ax1,ax2) = plt.subplots(ncols=2,figsize=(16,7))
     ## average idle driving distance
+    model_order = ["TES","TRC","R2I","eFlx","Oracle"]
     sns.barplot(data=results_df,x="model",y="idle_driving_provision",
-        order=["TES","TRC","R2I","eFlx","Oracle"],color="grey",ax=ax1,capsize=0.15,errwidth=1,errorbar=("sd"))
+        order=[m for m in model_order if m in models],color="grey",ax=ax1,capsize=0.15,errwidth=1,errorbar=("sd"))
     ax1.set_ylabel("Average idle distance (mile)",fontsize=28,fontname="Times New Roman")
     ax1.set_xlabel("",fontsize=28,fontname="Times New Roman")
     ax1.set_ylim(bottom=7)
         
     ## average idle waiting time
+    model_order = ["TES","TRC","R2I","eFlx","Oracle"]
     sns.barplot(data=results_df,x="model",y="idle_wating_provision",
-        order=["TES","TRC","R2I","eFlx","Oracle"],color="grey",ax=ax2,capsize=0.15,errwidth=1,errorbar=("sd"))
+        order=[m for m in model_order if m in models],color="grey",ax=ax2,capsize=0.15,errwidth=1,errorbar=("sd"))
     ax2.set_ylabel("Average idle waiting time (min)",fontsize=28,fontname="Times New Roman")
     ax2.set_xlabel("",fontsize=28,fontname="Times New Roman")
     ax2.set_ylim(bottom=0)

@@ -16,6 +16,8 @@ ADD requirement.txt /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirement.txt
+RUN apt-get update && apt-get install -y nano
+
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
@@ -25,4 +27,5 @@ ENV GUROBI_HOME=/opt/gurobi
 ENV GRB_LICENSE_FILE=/opt/gurobi/gurobi.lic
 
 # Run app.py when the container launches
-CMD ["python", "main.py"]
+# CMD ["python", "main.py"]
+CMD [ "/bin/bash" ]
